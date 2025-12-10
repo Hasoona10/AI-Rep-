@@ -4,9 +4,9 @@ An intelligent receptionist system for local businesses (restaurants first) that
 
 **Repository**: [https://github.com/Hasoona10/AI-Rep-](https://github.com/Hasoona10/AI-Rep-)
 
-## 🚀 Features
+##  Features
 
-### ML Components (NEW) ✅
+### ML Components (NEW) 
 - **Trained Intent Classifier**: Supervised ML model (Random Forest, SVM, Logistic Regression)
 - **Feature Extraction**: TF-IDF, Bag-of-Words, PCA
 - **Model Training Pipeline**: Automated training with cross-validation
@@ -17,7 +17,7 @@ An intelligent receptionist system for local businesses (restaurants first) that
 
 See [ML_README.md](ML_README.md) for detailed ML documentation.
 
-### Phase 1 - Phone Agent MVP ✅
+### Phase 1 - Phone Agent MVP 
 - Twilio webhook integration
 - Speech-to-Text using OpenAI Whisper
 - Intent classification (LLM-based)
@@ -26,19 +26,19 @@ See [ML_README.md](ML_README.md) for detailed ML documentation.
 - Text-to-Speech via Twilio
 - Comprehensive logging
 
-### Phase 2 - RAG + Business Info ✅
+### Phase 2 - RAG + Business Info 
 - ChromaDB vector store
 - Business data loading (menu, hours, pricing)
 - Retrieval augmentation pipeline
 - Multi-turn conversation state
 
-### Phase 3 - Reservations ✅
+### Phase 3 - Reservations 
 - Reservation intent detection
 - Calendar integration (JSON-based)
 - Reservation rules ("table for 2", "tomorrow 7pm")
 - SMS confirmation (placeholder)
 
-### Phase 4 - Web Chat Widget ✅
+### Phase 4 - Web Chat Widget 
 - JavaScript chat widget
 - HTML injection snippet
 - WebSocket endpoint (structure)
@@ -57,7 +57,7 @@ See [ML_README.md](ML_README.md) for detailed ML documentation.
 - Webhook for subscription success
 - Auto-create business profile
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 ai-assistant/
@@ -142,14 +142,14 @@ cd ai-assistant/backend
 python main.py
 ```
 
-## 📞 Twilio Configuration
+##  Twilio Configuration
 
 1. Get a Twilio phone number
 2. Configure webhook URLs in Twilio Console:
    - Voice URL: `https://your-domain.com/api/twilio/voice/incoming`
    - Status Callback: `https://your-domain.com/api/twilio/voice/status`
 
-## 🌐 Web Widget Usage
+##  Web Widget Usage
 
 Add the widget to any website:
 
@@ -163,7 +163,7 @@ window.AIReceptionistConfig = {
 <script src="http://localhost:8000/widget/widget.js"></script>
 ```
 
-## 🔧 API Endpoints
+##  API Endpoints
 
 ### Phone (Twilio)
 - `POST /api/twilio/voice/incoming` - Handle incoming calls
@@ -182,7 +182,7 @@ window.AIReceptionistConfig = {
 - `GET /` - Root endpoint
 - `GET /health` - Health check
 
-## 🧪 Testing
+##  Testing
 
 Run intent classification tests:
 
@@ -191,7 +191,7 @@ cd ai-assistant/backend
 pytest tests/test_intents.py -v
 ```
 
-## 📝 Development Phases
+##  Development Phases
 
 - [x] Phase 1: Phone Agent MVP
 - [x] Phase 2: RAG + Business Info
@@ -200,7 +200,7 @@ pytest tests/test_intents.py -v
 - [ ] Phase 5: Owner Dashboard (full implementation)
 - [ ] Phase 6: Stripe Subscription (full implementation)
 
-## 🔒 Security Notes
+## � Security Notes
 
 - Change CORS settings for production
 - Use environment variables for all secrets
@@ -208,11 +208,11 @@ pytest tests/test_intents.py -v
 - Validate all Twilio webhook requests
 - Rate limit API endpoints
 
-## 📄 License
+## � License
 
 MIT License
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions welcome! Please open an issue or submit a pull request.
 
