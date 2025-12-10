@@ -1,0 +1,498 @@
+{
+  "business_id": "restaurant_001",
+  "business_name": "Cedar Garden Lebanese Kitchen",
+  "short_name": "Cedar Garden",
+  "description": "Cedar Garden is a family-owned Lebanese restaurant serving classic mezze, charcoal-grilled kebabs, shawarma, and traditional desserts in a warm, casual setting.",
+  "category": "Lebanese Restaurant",
+  "address": {
+    "street": "1840 Cedar Grove Ave",
+    "city": "Fullerton",
+    "state": "CA",
+    "zip": "92831",
+    "country": "USA"
+  },
+  "contact": {
+    "phone": "(714) 555-8734",
+    "phone_reservations": "(714) 555-8734",
+    "email": "info@cedargardenlebanese.com",
+    "website": "https://www.cedargardenlebanese.com",
+    "instagram": "@cedargardenlebanese",
+    "facebook": "https://www.facebook.com/cedargardenlebanese"
+  },
+  "hours": {
+    "monday": "11:00 am – 9:00 pm",
+    "tuesday": "11:00 am – 9:00 pm",
+    "wednesday": "11:00 am – 9:00 pm",
+    "thursday": "11:00 am – 9:30 pm",
+    "friday": "11:00 am – 10:00 pm",
+    "saturday": "11:00 am – 10:00 pm",
+    "sunday": "12:00 pm – 8:30 pm"
+  },
+  "is_open_24_7": false,
+  "location_info": {
+    "parking": "Shared parking lot in front of the plaza with overflow parking along Cedar Grove Ave.",
+    "landmarks": "Located in Cedar Grove Plaza near the intersection of Chapman Ave and State College Blvd, next to a Starbucks and across from a Target.",
+    "entrance_notes": "Main entrance faces the plaza parking lot. Side entrance available for takeout pickup."
+  },
+  "languages_supported": [
+    "English",
+    "Arabic"
+  ],
+  "services": {
+    "dine_in": true,
+    "takeout": true,
+    "delivery": true,
+    "delivery_partners": [
+      "DoorDash",
+      "Uber Eats",
+      "Grubhub"
+    ],
+    "curbside_pickup": true,
+    "online_ordering": true,
+    "catering": true,
+    "private_events": true,
+    "banquet_room": true,
+    "patio_seating": true,
+    "hookah": false,
+    "halal_meat": true
+  },
+  "menu_sections": [
+    {
+      "name": "Cold Mezze",
+      "description": "Traditional Lebanese cold appetizers, perfect for sharing.",
+      "items": [
+        {
+          "name": "Hummus",
+          "price": 9.50,
+          "description": "Creamy chickpea and tahini dip topped with olive oil and paprika, served with warm pita.",
+          "tags": ["vegetarian", "vegan", "gluten_free_option"],
+          "popular": true
+        },
+        {
+          "name": "Baba Ghanoush",
+          "price": 10.00,
+          "description": "Smoky roasted eggplant dip with tahini, lemon, and garlic, served with warm pita.",
+          "tags": ["vegetarian", "vegan", "gluten_free_option"],
+          "popular": true
+        },
+        {
+          "name": "Labneh",
+          "price": 9.75,
+          "description": "Strained yogurt spread topped with olive oil and mint, served with pita bread.",
+          "tags": ["vegetarian"],
+          "popular": false
+        },
+        {
+          "name": "Grape Leaves (Warak Enab)",
+          "price": 11.25,
+          "description": "Vine leaves stuffed with rice, tomatoes, onions, and herbs. Served chilled with lemon.",
+          "tags": ["vegetarian", "vegan"],
+          "popular": true
+        },
+        {
+          "name": "Moutabbal",
+          "price": 10.50,
+          "description": "Eggplant and tahini dip blended smooth, finished with pomegranate seeds and olive oil.",
+          "tags": ["vegetarian", "vegan", "gluten_free_option"],
+          "popular": false
+        }
+      ]
+    },
+    {
+      "name": "Hot Mezze",
+      "description": "Hot appetizers and small plates, great for sharing or starting your meal.",
+      "items": [
+        {
+          "name": "Falafel",
+          "price": 11.50,
+          "description": "Crispy chickpea fritters served with tahini sauce and pickles.",
+          "tags": ["vegetarian", "vegan"],
+          "popular": true
+        },
+        {
+          "name": "Fried Kibbeh",
+          "price": 12.50,
+          "description": "Cracked wheat shells stuffed with seasoned ground beef, onions, and pine nuts, deep-fried until crispy.",
+          "tags": ["beef"],
+          "popular": true
+        },
+        {
+          "name": "Spicy Potatoes (Batata Harra)",
+          "price": 10.75,
+          "description": "Crispy potatoes tossed with garlic, cilantro, chili, and lemon.",
+          "tags": ["vegetarian", "vegan", "spicy", "gluten_free"],
+          "popular": true
+        },
+        {
+          "name": "Halloumi Grill",
+          "price": 12.00,
+          "description": "Grilled halloumi cheese served with tomatoes, cucumbers, and olives.",
+          "tags": ["vegetarian", "gluten_free"],
+          "popular": false
+        }
+      ]
+    },
+    {
+      "name": "Salads",
+      "description": "Fresh, herb-forward Lebanese salads.",
+      "items": [
+        {
+          "name": "Tabbouleh",
+          "price": 11.50,
+          "description": "Chopped parsley, mint, tomatoes, onions, and fine bulgur tossed with lemon and olive oil.",
+          "tags": ["vegetarian", "vegan"],
+          "popular": true
+        },
+        {
+          "name": "Fattoush",
+          "price": 12.00,
+          "description": "Mixed greens, tomatoes, cucumbers, radishes, onions, and toasted pita chips in a tangy sumac dressing.",
+          "tags": ["vegetarian", "vegan"],
+          "popular": true
+        },
+        {
+          "name": "Mediterranean Chicken Salad",
+          "price": 16.50,
+          "description": "Grilled marinated chicken over mixed greens with tomatoes, cucumbers, olives, and feta cheese.",
+          "tags": ["poultry", "gluten_free_option"],
+          "popular": false
+        }
+      ]
+    },
+    {
+      "name": "Wraps & Sandwiches",
+      "description": "Stuffed in pita or saj bread, served with fries or salad.",
+      "items": [
+        {
+          "name": "Chicken Shawarma Wrap",
+          "price": 15.50,
+          "description": "Thinly sliced marinated chicken, garlic sauce, pickles, and lettuce in warm pita.",
+          "tags": ["poultry"],
+          "popular": true
+        },
+        {
+          "name": "Beef Shawarma Wrap",
+          "price": 16.00,
+          "description": "Spiced beef slices, tahini sauce, onions, and tomatoes in pita.",
+          "tags": ["beef"],
+          "popular": true
+        },
+        {
+          "name": "Falafel Wrap",
+          "price": 14.00,
+          "description": "Falafel, hummus, tomatoes, pickles, and tahini sauce in pita.",
+          "tags": ["vegetarian", "vegan"],
+          "popular": true
+        },
+        {
+          "name": "Kafta Wrap",
+          "price": 16.25,
+          "description": "Ground beef and lamb kafta, onions, parsley, and tahini in pita.",
+          "tags": ["beef", "lamb"],
+          "popular": false
+        }
+      ]
+    },
+    {
+      "name": "Grill & Entrees",
+      "description": "Charcoal-grilled kebabs, plates, and traditional Lebanese mains.",
+      "items": [
+        {
+          "name": "Mixed Grill Plate",
+          "price": 27.50,
+          "description": "Combination of chicken kabob, beef kabob, and kafta, served with rice, grilled vegetables, and garlic sauce.",
+          "tags": ["poultry", "beef", "lamb", "gluten_free"],
+          "popular": true
+        },
+        {
+          "name": "Chicken Kabob Plate",
+          "price": 21.00,
+          "description": "Charcoal-grilled marinated chicken skewers served with rice, salad, and garlic sauce.",
+          "tags": ["poultry", "gluten_free"],
+          "popular": true
+        },
+        {
+          "name": "Beef Kabob Plate",
+          "price": 22.50,
+          "description": "Grilled beef skewers with rice, grilled vegetables, and tahini sauce.",
+          "tags": ["beef", "gluten_free"],
+          "popular": false
+        },
+        {
+          "name": "Lamb Chops",
+          "price": 28.00,
+          "description": "Charcoal-grilled lamb chops with herb marinade, served with rice and grilled vegetables.",
+          "tags": ["lamb", "gluten_free"],
+          "popular": true
+        },
+        {
+          "name": "Mujadara Plate",
+          "price": 18.50,
+          "description": "Lentils and rice cooked with caramelized onions, served with salad and yogurt on the side.",
+          "tags": ["vegetarian", "vegan_option", "gluten_free"],
+          "popular": false
+        }
+      ]
+    },
+    {
+      "name": "Family Trays",
+      "description": "Large-format trays for families and small gatherings (takeout or catering).",
+      "items": [
+        {
+          "name": "Mixed Grill Tray",
+          "price": 110.00,
+          "description": "Serves 6–8: chicken, beef, and kafta skewers, rice, grilled vegetables, hummus, and garlic sauce.",
+          "tags": ["catering", "poultry", "beef", "lamb"],
+          "popular": true
+        },
+        {
+          "name": "Mezze Party Tray",
+          "price": 95.00,
+          "description": "Serves 8–10: hummus, baba ghanoush, grape leaves, falafel, tabbouleh, fattoush, and pita.",
+          "tags": ["catering", "vegetarian", "vegan_option"],
+          "popular": true
+        }
+      ]
+    },
+    {
+      "name": "Desserts",
+      "description": "Traditional Lebanese sweets.",
+      "items": [
+        {
+          "name": "Baklava",
+          "price": 8.50,
+          "description": "Layers of phyllo, walnuts, and honey syrup.",
+          "tags": ["vegetarian"],
+          "popular": true
+        },
+        {
+          "name": "Knafeh",
+          "price": 9.50,
+          "description": "Warm sweet cheese dessert topped with shredded phyllo and syrup.",
+          "tags": ["vegetarian"],
+          "popular": true
+        },
+        {
+          "name": "Rice Pudding (Riz Bi Haleeb)",
+          "price": 7.50,
+          "description": "Creamy rice pudding with cinnamon and pistachios.",
+          "tags": ["vegetarian", "gluten_free"],
+          "popular": false
+        }
+      ]
+    },
+    {
+      "name": "Beverages",
+      "description": "Hot and cold drinks.",
+      "items": [
+        {
+          "name": "Soft Drinks",
+          "price": 3.50,
+          "description": "Coke, Diet Coke, Sprite, and other assorted sodas. Free refills for dine-in.",
+          "tags": [],
+          "popular": false
+        },
+        {
+          "name": "Mint Lemonade",
+          "price": 5.50,
+          "description": "Freshly squeezed lemonade blended with mint.",
+          "tags": [],
+          "popular": true
+        },
+        {
+          "name": "Ayran (Yogurt Drink)",
+          "price": 4.50,
+          "description": "Savory yogurt drink with a touch of salt.",
+          "tags": ["vegetarian"],
+          "popular": false
+        },
+        {
+          "name": "Turkish Coffee",
+          "price": 4.75,
+          "description": "Strong, finely ground coffee served in the traditional style.",
+          "tags": [],
+          "popular": false
+        },
+        {
+          "name": "Hot Tea",
+          "price": 3.50,
+          "description": "Black tea or mint tea, served with sugar on the side.",
+          "tags": [],
+          "popular": false
+        }
+      ]
+    }
+  ],
+  "specials": [
+    {
+      "name": "Lunch Shawarma Combo",
+      "description": "Monday–Friday 11:00 am – 3:00 pm: any shawarma wrap with fries and a soft drink for 14.99.",
+      "schedule": "Mon–Fri 11:00 am – 3:00 pm"
+    },
+    {
+      "name": "Family Mixed Grill Night",
+      "description": "Family-style mixed grill platter for four with rice, salad, and mezze for 69.99.",
+      "schedule": "Daily after 5:00 pm"
+    },
+    {
+      "name": "Mezze Monday",
+      "description": "20% off all mezze plates on Mondays for dine-in only.",
+      "schedule": "Mondays all day"
+    }
+  ],
+  "faq": [
+    {
+      "question": "Do you take reservations?",
+      "answer": "Yes, we take reservations for parties of 2 to 10 guests. Larger parties should call in advance so we can discuss options.",
+      "tags": ["reservations"],
+      "intent": "reservation_info"
+    },
+    {
+      "question": "How can I make a reservation?",
+      "answer": "You can make a reservation by calling us at (714) 555-8734. Online reservations may be added in the future.",
+      "tags": ["reservations"],
+      "intent": "reservation_info"
+    },
+    {
+      "question": "What are your hours?",
+      "answer": "We are open Monday through Thursday from 11:00 am to 9:00 pm, Friday and Saturday from 11:00 am to 10:00 pm, and Sunday from 12:00 pm to 8:30 pm.",
+      "tags": ["hours"],
+      "intent": "hours"
+    },
+    {
+      "question": "Are you halal?",
+      "answer": "Yes, we serve halal meat. If you have any specific concerns, please ask and we can guide you to suitable options.",
+      "tags": ["dietary", "halal"],
+      "intent": "dietary_info"
+    },
+    {
+      "question": "Do you have vegetarian or vegan options?",
+      "answer": "Yes, we have many vegetarian and several vegan options, especially in our mezze and salads. Dishes like hummus, baba ghanoush, grape leaves, tabbouleh, fattoush, falafel, and mujadara are popular choices.",
+      "tags": ["dietary", "vegetarian", "vegan"],
+      "intent": "dietary_info"
+    },
+    {
+      "question": "Do you offer gluten-free options?",
+      "answer": "Yes, several of our grilled plates, salads, and some mezze items are naturally gluten-free or can be prepared without bread. Please inform your server about any gluten sensitivities.",
+      "tags": ["dietary", "gluten_free"],
+      "intent": "dietary_info"
+    },
+    {
+      "question": "Do you offer catering or party trays?",
+      "answer": "Yes, we offer catering and large party trays for events, including mixed grill and mezze trays. Most orders require 24–48 hours’ notice depending on size.",
+      "tags": ["catering"],
+      "intent": "catering_info"
+    },
+    {
+      "question": "Do you have a private room for events?",
+      "answer": "Yes, we have a private banquet room that can host up to 30 guests and a semi-private patio area. Please call for availability and details.",
+      "tags": ["private_events"],
+      "intent": "private_event_info"
+    },
+    {
+      "question": "Is there parking available?",
+      "answer": "Yes, there is a shared parking lot in front of the restaurant and additional parking along Cedar Grove Ave.",
+      "tags": ["parking"],
+      "intent": "parking_info"
+    },
+    {
+      "question": "Can I bring an outside cake?",
+      "answer": "Yes, you can bring an outside cake for celebrations. A small plating fee may apply. Please ask your server for details.",
+      "tags": ["policies"],
+      "intent": "policy_info"
+    },
+    {
+      "question": "Do you have a kids menu?",
+      "answer": "We do not have a separate kids menu, but we can make smaller portions of kabobs, shawarma, and pasta dishes for children at a reduced price.",
+      "tags": ["kids"],
+      "intent": "general_info"
+    },
+    {
+      "question": "Can you accommodate large groups?",
+      "answer": "Yes, we can accommodate large groups with advance notice. For parties of 10 or more, please call us to discuss seating and timing.",
+      "tags": ["large_parties"],
+      "intent": "reservation_info"
+    }
+  ],
+  "policies": {
+    "reservations": "Reservations are recommended for weekends and large groups, but walk-ins are always welcome when space is available.",
+    "large_parties": "Parties of 8 or more may be subject to an 18% automatic gratuity. For parties of 10 or more, we recommend calling ahead to confirm availability.",
+    "cancellation": "For standard reservations, we appreciate at least 2 hours’ notice. For large parties, 24–48 hours’ notice is preferred.",
+    "dress_code": "Casual attire is welcome. We simply ask that guests wear shirts and shoes.",
+    "outside_food": "Outside cakes are allowed for celebrations; a small plating fee may apply. Outside beverages are not permitted.",
+    "gratuity": "An 18% service charge may be added to parties of 8 or more.",
+    "pets": "Only service animals are permitted inside. Well-behaved dogs may be allowed on the patio where local regulations permit.",
+    "accessibility": "The main dining room, patio, and restrooms are wheelchair accessible.",
+    "takeout": "Most items are available for takeout. You can order by phone, online, or through our delivery partners."
+  },
+  "reservation_rules": {
+    "min_party_size": 1,
+    "max_party_size": 10,
+    "large_party_threshold": 8,
+    "max_online_party_size": 8,
+    "requires_phone_for_large_parties": true,
+    "lead_time_minutes_standard": 60,
+    "lead_time_minutes_large_party": 1440,
+    "reservation_time_slots": [
+      "5:00 pm",
+      "5:30 pm",
+      "6:00 pm",
+      "6:30 pm",
+      "7:00 pm",
+      "7:30 pm",
+      "8:00 pm",
+      "8:30 pm"
+    ],
+    "hold_time_minutes": 15,
+    "no_show_fee": false,
+    "weekend_deposit_required": false
+  },
+  "inventory_status": {
+    "baklava": "in_stock",
+    "knafeh": "low",
+    "rice_pudding": "in_stock",
+    "mixed_grill_tray": "in_stock",
+    "mezze_party_tray": "in_stock",
+    "lamb_chops": "low",
+    "mint_lemonade": "in_stock",
+    "seasonal_special": "out"
+  },
+  "rewards_program": {
+    "available": true,
+    "name": "Cedar Rewards",
+    "description": "Earn 1 point for every dollar spent. 100 points = $5 off your next visit.",
+    "signup_methods": [
+      "in_person",
+      "website"
+    ]
+  },
+  "ai_persona": {
+    "assistant_name": "Cedar",
+    "tone_of_voice": "warm, welcoming, respectful, and slightly casual while staying professional",
+    "speaks_for_business_as": "we",
+    "can_make_promises": false,
+    "escalation_policy": "For anything uncertain, unavailable, or involving refunds, large catering orders, or private events, the assistant should politely offer to connect the caller with a staff member or ask them to call during business hours to speak with a manager."
+  },
+  "top_questions": [
+    "Are you open right now?",
+    "What time do you close tonight?",
+    "Are you halal?",
+    "Do you take reservations?",
+    "Can I book a table for 4 at 7 pm?",
+    "Where are you located?",
+    "Is there parking at your restaurant?",
+    "Do you have vegetarian or vegan options?",
+    "Do you have gluten-free options?",
+    "Do you offer catering or party trays?",
+    "Do you have a private room for parties?",
+    "Can you accommodate a group of 12 people?",
+    "Do you do takeout?",
+    "Do you deliver or use DoorDash or Uber Eats?",
+    "Can I bring my own cake?",
+    "Do you have a kids menu or smaller portions for kids?",
+    "How busy are you right now?",
+    "Do you have outdoor or patio seating?",
+    "What are your most popular dishes?",
+    "Do you serve alcohol or hookah?"
+  ]
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Receptionist Dashboard</title>
+    <link rel="stylesheet" href="/dashboard/static/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>AI Receptionist Dashboard</h1>
+            <nav>
+                <a href="#settings">Settings</a>
+                <a href="#logs">Logs</a>
+                <a href="#reservations">Reservations</a>
+                <a href="#logout">Logout</a>
+            </nav>
+        </header>
+        
+        <main class="dashboard-main">
+            <section id="settings" class="dashboard-section">
+                <h2>Business Settings</h2>
+                <form id="business-form">
+                    <div class="form-group">
+                        <label for="business-name">Business Name</label>
+                        <input type="text" id="business-name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="business-hours">Hours</label>
+                        <div id="hours-container"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="menu">Menu</label>
+                        <textarea id="menu" name="menu" rows="10"></textarea>
+                    </div>
+                    
+                    <button type="submit">Save Changes</button>
+                </form>
+            </section>
+            
+            <section id="logs" class="dashboard-section">
+                <h2>Call Logs</h2>
+                <div id="logs-container"></div>
+            </section>
+            
+            <section id="reservations" class="dashboard-section">
+                <h2>Reservations</h2>
+                <div id="reservations-container"></div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="/dashboard/static/script.js"></script>
+</body>
+</html>
+
+

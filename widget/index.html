@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Receptionist Widget Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+        }
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Receptionist Widget Demo</h1>
+    
+    <div class="instructions">
+        <h2>How to use:</h2>
+        <p>1. Copy the widget script to your website:</p>
+        <pre><code>&lt;script&gt;
+window.AIReceptionistConfig = {
+    apiUrl: 'http://localhost:8000',
+    businessId: 'restaurant_001'
+};
+&lt;/script&gt;
+&lt;script src="http://localhost:8000/widget/widget.js"&gt;&lt;/script&gt;</code></pre>
+        
+        <p>2. Or load it directly:</p>
+        <pre><code>&lt;script src="http://localhost:8000/widget/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    window.AIReceptionist = new window.AIReceptionistWidget({
+        apiUrl: 'http://localhost:8000',
+        businessId: 'restaurant_001',
+        position: 'bottom-right'
+    });
+&lt;/script&gt;</code></pre>
+        
+        <p>The chat widget should appear in the bottom-right corner of this page.</p>
+    </div>
+    
+    <script>
+        window.AIReceptionistConfig = {
+            apiUrl: 'http://localhost:8000',
+            businessId: 'restaurant_001',
+            position: 'bottom-right'
+        };
+    </script>
+    <script src="widget.js"></script>
+</body>
+</html>
+
+
