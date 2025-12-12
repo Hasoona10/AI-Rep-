@@ -113,7 +113,9 @@ class ReservationSystem:
     
     def parse_reservation_request(self, text: str, intent: Intent) -> Optional[Dict]:
         """
-        Parse reservation details from customer text using LLM.
+        Parse reservation details from customer text.
+        
+        COST OPTIMIZATION: Uses pattern matching first, only uses LLM for complex cases.
         
         Args:
             text: Customer's message
@@ -126,6 +128,69 @@ class ReservationSystem:
             return None
         
         try:
+            import re
+            
+            # COST OPTIMIZATION: Try pattern matching first (no LLM call)
+            text_lower = text.lower()
+            parsed = {}
+            
+            # Extract party size (pattern: "for 2", "table for 4", "party of 6", etc.)
+            party_patterns = [
+                r'(?:for|party of|table for)\s+(\d+)',
+                r'(\d+)\s+(?:people|guests|persons)',
+                r'(\d+)\s+(?:person|people|guest)'
+            ]
+            for pattern in party_patterns:
+                match = re.search(pattern, text_lower)
+                if match:
+                    parsed['party_size'] = int(match.group(1))
+                    break
+            
+            # Extract date (pattern: "tomorrow", "friday", "next week", "12/25", etc.)
+            date_patterns = [
+                (r'tomorrow', lambda: (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")),
+                (r'today', lambda: datetime.now().strftime("%Y-%m-%d")),
+                (r'(\d{1,2})/(\d{1,2})', lambda m: f"{datetime.now().year}-{m.group(2).zfill(2)}-{m.group(1).zfill(2)}"),
+                (r'(\d{4})-(\d{1,2})-(\d{1,2})', lambda m: f"{m.group(1)}-{m.group(2).zfill(2)}-{m.group(3).zfill(2)}"),
+            ]
+            for pattern, formatter in date_patterns:
+                match = re.search(pattern, text_lower)
+                if match:
+                    if callable(formatter):
+                        parsed['date'] = formatter() if not match.groups() else formatter(match)
+                    else:
+                        parsed['date'] = formatter
+                    break
+            
+            # Extract time (pattern: "7pm", "7:00", "19:00", "dinner time", etc.)
+            time_patterns = [
+                (r'(\d{1,2}):(\d{2})', lambda m: f"{m.group(1).zfill(2)}:{m.group(2)}"),
+                (r'(\d{1,2})\s*(?:pm|PM)', lambda m: f"{int(m.group(1)) + 12 if int(m.group(1)) < 12 else int(m.group(1))}:00"),
+                (r'(\d{1,2})\s*(?:am|AM)', lambda m: f"{int(m.group(1)):02d}:00"),
+                (r'dinner', lambda: "19:00"),
+                (r'lunch', lambda: "12:00"),
+            ]
+            for pattern, formatter in time_patterns:
+                match = re.search(pattern, text_lower)
+                if match:
+                    parsed['time'] = formatter(match) if match.groups() else formatter()
+                    break
+            
+            # If we extracted enough info with patterns, return it (no LLM needed!)
+            if parsed.get('party_size') or parsed.get('date') or parsed.get('time'):
+                # Set defaults for missing fields
+                if 'party_size' not in parsed:
+                    parsed['party_size'] = 2
+                if 'date' not in parsed:
+                    parsed['date'] = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+                if 'time' not in parsed:
+                    parsed['time'] = "19:00"
+                
+                logger.info(f"✅ Parsed reservation using PATTERN MATCHING (no LLM): {parsed}")
+                return parsed
+            
+            # Only use LLM for complex/ambiguous cases
+            logger.info(f"⚠️ Using LLM for complex reservation parsing: {text[:50]}...")
             from openai import OpenAI
             import os
             

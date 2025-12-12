@@ -1,5 +1,10 @@
 """
 Generate synthetic training data for intent classification.
+
+DEMO SECTION: Fine-Tuning/Training - Training Data Generation
+Since I don't have real customer data, I generate synthetic training examples!
+This creates variations of common phrases for each intent (greeting, hours, menu, etc.)
+so the ML models have something to learn from. It's like creating a dataset from scratch.
 """
 import csv
 import random
@@ -78,9 +83,18 @@ def generate_synthetic_examples(intent: Intent, num_examples: int = 50) -> List[
     """
     Generate synthetic examples for an intent.
     
+    This function creates variations of template phrases for each intent.
+    For example, for "hours" intent, it might generate:
+    - "what are your hours"
+    - "when are you open"
+    - "I'm wondering what are your hours"
+    - "Can you tell me when are you open"
+    
+    This gives the model lots of examples to learn from!
+    
     Args:
-        intent: Intent class
-        num_examples: Number of examples to generate
+        intent: Intent class (like Intent.HOURS, Intent.MENU, etc.)
+        num_examples: Number of examples to generate (default 50)
         
     Returns:
         List of generated text examples
@@ -123,13 +137,22 @@ def create_training_dataset(
     """
     Create training and test datasets.
     
+    This is the main function that creates the full dataset! It:
+    1. Generates examples for each intent class
+    2. Shuffles them all together
+    3. Splits into train/test sets (80/20 by default)
+    4. Saves as CSV files
+    
+    The training set is used to train the models, and the test set
+    is used to evaluate how well they perform on unseen data.
+    
     Args:
-        output_path: Path to save the dataset
-        examples_per_intent: Number of examples per intent class
+        output_path: Path to save the dataset (base path)
+        examples_per_intent: Number of examples per intent class (default 100)
         train_split: Ratio of training data (0.8 = 80% train, 20% test)
         
     Returns:
-        Tuple of (train_path, test_path)
+        Tuple of (train_path, test_path) - paths to the CSV files
     """
     # Generate all examples
     all_data = []

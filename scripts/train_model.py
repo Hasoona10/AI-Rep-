@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
 """
 Script to train intent classification models.
+
+DEMO SECTION: Fine-Tuning/Training - Main Training Script
+This is the main script I run to train all my ML models! It does everything:
+1. Generates synthetic training data (if needed)
+2. Trains multiple models (Random Forest, SVM, Logistic Regression)
+3. Finds the best model and saves it
+4. Compares ML vs rule-based vs LLM methods
+
+Just run: python scripts/train_model.py
 """
 import sys
 from pathlib import Path
 
-# Add parent directory to path
+# Add parent directory to path (so we can import backend modules)
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from backend.data.training.synthetic_data import create_training_dataset
@@ -19,46 +28,73 @@ load_dotenv()
 
 
 def main():
-    """Main training pipeline."""
+    """
+    Main training pipeline.
+    
+    This function runs the entire training process from start to finish.
+    It's like the "main" function for fine-tuning my models.
+    """
     logger.info("Starting model training pipeline...")
     
-    # Setup paths
+    # Setup paths - where to find/save data and models
     project_root = Path(__file__).parent.parent
     data_dir = project_root / "backend" / "data" / "training"
     models_dir = project_root / "models"
     test_data_path = project_root / "backend" / "data" / "training" / "intent_dataset_test.csv"
     
-    # Step 1: Generate training data if it doesn't exist
+    # Step 1: Check for merged dataset (includes order intents) or generate training data
+    # Priority: Use merged dataset if available (includes 1500 order examples)
+    merged_train_path = data_dir / "intent_dataset_train_merged.csv"
     train_data_path = data_dir / "intent_dataset_train.csv"
-    if not train_data_path.exists() or not test_data_path.exists():
+    
+    if merged_train_path.exists():
+        logger.info(f"✅ Found merged training dataset with order intents: {merged_train_path}")
+        train_data_path = merged_train_path
+        # For test data, use existing or create from merged
+        if not test_data_path.exists():
+            logger.info("Creating test split from merged dataset...")
+            # We'll split the merged data for testing
+            import pandas as pd
+            from sklearn.model_selection import train_test_split
+            df = pd.read_csv(merged_train_path)
+            train_df, test_df = train_test_split(df, test_size=0.2, random_state=42, stratify=df['intent'])
+            test_data_path = data_dir / "intent_dataset_test_merged.csv"
+            test_df.to_csv(test_data_path, index=False)
+            logger.info(f"Created test split: {len(test_df)} examples")
+    elif not train_data_path.exists() or not test_data_path.exists():
         logger.info("Generating synthetic training data...")
+        # This creates ~800 examples across 8 intent classes
         train_data_path, test_data_path = create_training_dataset(
             data_dir / "intent_dataset.csv",
-            examples_per_intent=100,
-            train_split=0.8
+            examples_per_intent=100,  # 100 examples per intent class
+            train_split=0.8  # 80% for training, 20% for testing
         )
     
     # Step 2: Train models
+    # I train multiple algorithms to see which one works best
     logger.info("\n" + "="*60)
     logger.info("Training Multiple Models")
     logger.info("="*60)
     
     results = train_multiple_models(
         train_data_path=train_data_path,
-        algorithms=["random_forest", "logistic", "svm"],
-        feature_methods=["tfidf"],
-        models_dir=models_dir
+        algorithms=["random_forest", "logistic", "svm"],  # Try these 3 algorithms
+        feature_methods=["tfidf"],  # Use TF-IDF for feature extraction
+        models_dir=models_dir  # Save trained models here
     )
     
     # Step 3: Register best model
+    # Find which model performed best and save it to the registry
     registry = get_registry(models_dir / "registry.json")
     best_model_name = None
     best_accuracy = -1
     
+    # Loop through all trained models and find the one with highest accuracy
     for config_name, result in results.items():
         if 'error' in result:
-            continue
+            continue  # Skip models that failed to train
         
+        # Get accuracy (prefer validation accuracy, fall back to CV mean)
         accuracy = result.get('validation_accuracy', result.get('cv_mean', 0))
         if accuracy > best_accuracy:
             best_accuracy = accuracy
@@ -67,7 +103,7 @@ def main():
     if best_model_name:
         logger.info(f"\nBest model: {best_model_name} (accuracy: {best_accuracy:.4f})")
         
-        # Register in registry
+        # Register in registry so the system knows which model to use
         algorithm, feature_method = best_model_name.split('_', 1)
         registry.register_model(
             model_name="intent_classifier",
@@ -82,11 +118,12 @@ def main():
         )
     
     # Step 4: Evaluate all methods
+    # Compare ML model vs rule-based vs LLM to see which is best overall
     logger.info("\n" + "="*60)
     logger.info("Evaluating All Methods")
     logger.info("="*60)
     
-    # Load best ML model
+    # Load best ML model so we can use it in comparison
     ml_classifier = None
     if best_model_name:
         from backend.ml_models.intent_classifier import IntentClassifier
@@ -97,12 +134,12 @@ def main():
         feature_extractor = FeatureExtractor.load(extractor_path)
         ml_classifier = IntentClassifier.load(model_dir, feature_extractor)
     
-    # Compare all methods
+    # Compare all methods (ML, rule-based, LLM) on test data
     evaluation_dir = project_root / "evaluation_results"
     comparison = compare_all_methods(
         test_data_path=test_data_path,
         ml_classifier=ml_classifier,
-        output_dir=evaluation_dir
+        output_dir=evaluation_dir  # Save confusion matrices and reports here
     )
     
     logger.info("\n" + "="*60)

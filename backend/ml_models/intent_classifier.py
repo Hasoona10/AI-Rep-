@@ -43,7 +43,13 @@ class IntentClassifier:
         self.intent_labels = None  # Map integers back to Intent enums
         
     def _create_model(self, **kwargs):
-        """Create the appropriate model based on algorithm."""
+        """
+        Create the appropriate model based on algorithm.
+        
+        This creates the actual ML model object (Random Forest, SVM, etc.)
+        based on which algorithm I chose. Each algorithm has different parameters
+        that I can tune to improve performance.
+        """
         if self.algorithm == "random_forest":
             return RandomForestClassifier(
                 n_estimators=kwargs.get('n_estimators', 100),
@@ -106,26 +112,29 @@ class IntentClassifier:
         """
         logger.info(f"Training {self.algorithm} classifier on {len(texts)} examples")
         
-        # Store feature extractor
+        # Store feature extractor - we need this later to make predictions
         self.feature_extractor = feature_extractor
         
-        # Create label encoder
+        # Create label encoder - convert intent names to numbers (ML models need numbers)
+        # For example: "reservation" -> 0, "menu" -> 1, "hours" -> 2, etc.
         unique_labels = sorted(set(labels))
         self.label_encoder = {label: idx for idx, label in enumerate(unique_labels)}
-        self.intent_labels = {idx: Intent(label) for label in unique_labels}
+        self.intent_labels = {idx: Intent(label) for idx, label in enumerate(unique_labels)}  # Map back to Intent enum
         
-        # Encode labels
+        # Encode labels - convert all text labels to numbers
         y_encoded = np.array([self.label_encoder[label] for label in labels])
         
-        # Extract features
+        # Extract features - convert text to numbers (TF-IDF vectors)
+        # This is the key step! Text becomes a matrix of numbers
         X = feature_extractor.transform(texts)
         logger.info(f"Feature matrix shape: {X.shape}")
         
-        # Create and train model
+        # Create and train model - THIS IS WHERE THE MAGIC HAPPENS!
+        # The model learns patterns from the training data
         self.model = self._create_model()
-        self.model.fit(X, y_encoded)
+        self.model.fit(X, y_encoded)  # This is the actual training step
         
-        # Calculate training accuracy
+        # Calculate training accuracy - how well does it do on training data?
         train_predictions = self.model.predict(X)
         train_accuracy = np.mean(train_predictions == y_encoded)
         logger.info(f"Training accuracy: {train_accuracy:.4f}")
@@ -137,12 +146,14 @@ class IntentClassifier:
             'n_classes': len(unique_labels)
         }
         
-        # Cross-validation
+        # Cross-validation - this checks if the model is overfitting
+        # It splits the data into folds and tests on each fold
+        # This gives a more reliable accuracy estimate than just training accuracy
         if cross_validate:
             logger.info(f"Performing {cv_folds}-fold cross-validation...")
             cv_scores = cross_val_score(self.model, X, y_encoded, cv=cv_folds, scoring='accuracy')
-            results['cv_mean'] = cv_scores.mean()
-            results['cv_std'] = cv_scores.std()
+            results['cv_mean'] = cv_scores.mean()  # Average accuracy across all folds
+            results['cv_std'] = cv_scores.std()  # Standard deviation (how consistent)
             results['cv_scores'] = cv_scores.tolist()
             logger.info(f"CV accuracy: {cv_scores.mean():.4f} (+/- {cv_scores.std() * 2:.4f})")
         

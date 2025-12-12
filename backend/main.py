@@ -15,11 +15,16 @@ import os
 from pathlib import Path
 from fastapi import FastAPI, Request, Response, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
 from dotenv import load_dotenv
 import json
 
 from .utils.logger import setup_logger, logger
+from pathlib import Path
+
+# Setup file logging for easier debugging
+log_file = Path(__file__).parent.parent / "server.log"
+logger = setup_logger(log_file=log_file)
 from .twilio_handler import handle_incoming_call, handle_voice_input, handle_call_status
 from .rag import RAGSystem, get_rag_system
 from .reservation_logic import ReservationSystem, get_reservation_system
@@ -45,6 +50,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Middleware to bypass ngrok browser warning for Twilio webhooks
+@app.middleware("http")
+async def bypass_ngrok_warning(request: Request, call_next):
+    """Bypass ngrok browser warning for API requests."""
+    response = await call_next(request)
+    # Add header to bypass ngrok warning (works for some ngrok versions)
+    response.headers["ngrok-skip-browser-warning"] = "true"
+    return response
 
 
 @app.on_event("startup")
@@ -165,12 +179,36 @@ async def startup_event():
 
 @app.get("/")
 async def root():
-    """Root endpoint."""
+    """Root endpoint - serves the website."""
+    website_path = Path(__file__).parent.parent / "website" / "index.html"
+    if website_path.exists():
+        with open(website_path, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read())
     return {
         "message": "AI Receptionist API",
         "version": "1.0.0",
         "status": "running"
     }
+
+
+@app.get("/website")
+async def website():
+    """Serve the main website."""
+    website_path = Path(__file__).parent.parent / "website" / "index.html"
+    if website_path.exists():
+        with open(website_path, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read())
+    return {"error": "Website not found"}
+
+
+@app.get("/website/styles.css")
+async def website_css():
+    """Serve website CSS."""
+    css_path = Path(__file__).parent.parent / "website" / "styles.css"
+    if css_path.exists():
+        with open(css_path, 'r', encoding='utf-8') as f:
+            return Response(content=f.read(), media_type="text/css")
+    return {"error": "CSS not found"}
 
 
 @app.get("/health")
@@ -181,148 +219,8 @@ async def health_check():
 
 @app.get("/owner/orders", response_class=HTMLResponse)
 async def owner_orders():
-    """
-    DEMO SECTION: Owner Dashboard - Order Management
-    
-    This is the owner dashboard! Restaurant owners can view all phone orders here.
-    It shows:
-    - Timestamp of each call
-    - What the customer said
-    - Structured order items (parsed from natural language)
-    - Order totals
-    - Full conversation transcripts
-    
-    The data comes from orders_log.json which gets updated every time someone places an order.
-    This is super useful for owners to see what's coming in and review orders.
-    """
-    orders = []
-    if ORDERS_LOG_PATH.exists():
-        try:
-            with ORDERS_LOG_PATH.open("r", encoding="utf-8") as f:
-                data = json.load(f)
-            if isinstance(data, list):
-                orders = data
-        except Exception as e:
-            logger.error(f"Error reading orders log: {str(e)}")
-
-    # Build HTML table with POS-style order details when available
-    rows = []
-    for o in reversed(orders):  # newest first
-        ts = o.get("timestamp", "")
-        call_sid = o.get("call_sid", "")
-        intent = o.get("intent", "")
-        customer_text = o.get("customer_text", "")
-        ai_response = o.get("ai_response", "")
-        order_items = o.get("order_items", [])
-        order_total = o.get("order_total")
-
-        # Build items summary
-        if order_items:
-            line_parts = []
-            for item in order_items:
-                qty = item.get("quantity", 1)
-                name = item.get("name", "item")
-                line_price = item.get("total_price")
-                if line_price is not None:
-                    line_parts.append(f"{qty} x {name} (${line_price:0.2f})")
-                else:
-                    line_parts.append(f"{qty} x {name}")
-            items_html = "<br>".join(line_parts)
-        else:
-            items_html = "<em>No structured items</em>"
-
-        if order_total is not None:
-            total_html = f"${order_total:0.2f}"
-        else:
-            total_html = "<em>N/A</em>"
-
-        rows.append(
-            f"<tr>"
-            f"<td>{ts}</td>"
-            f"<td>{call_sid}</td>"
-            f"<td>{intent}</td>"
-            f"<td>{customer_text}</td>"
-            f"<td>{items_html}</td>"
-            f"<td>{total_html}</td>"
-            f"<td>{ai_response}</td>"
-            f"</tr>"
-        )
-
-    table_body = "\n".join(rows) if rows else (
-        "<tr><td colspan='7' style='text-align:center;'>No orders logged yet.</td></tr>"
-    )
-
-    html = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Cedar Garden – Phone Order Log</title>
-        <style>
-            body {{
-                font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-                margin: 24px;
-                background: #fafafa;
-                color: #222;
-            }}
-            h1 {{
-                margin-bottom: 8px;
-            }}
-            table {{
-                border-collapse: collapse;
-                width: 100%;
-                background: #fff;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-            }}
-            th, td {{
-                border: 1px solid #e5e5e5;
-                padding: 8px 10px;
-                vertical-align: top;
-            }}
-            th {{
-                background: #f3f4f6;
-                text-align: left;
-                font-size: 13px;
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-            }}
-            td {{
-                font-size: 14px;
-            }}
-            .meta {{
-                margin-bottom: 16px;
-                font-size: 13px;
-                color: #555;
-            }}
-        </style>
-    </head>
-    <body>
-        <h1>Cedar Garden – Phone Orders</h1>
-        <div class="meta">
-            This page shows calls where the AI agent detected order-like language and, when possible,
-            captured a structured order (items + total) for the owner to review.
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Time (UTC)</th>
-                    <th>Call SID</th>
-                    <th>Intent</th>
-                    <th>Customer Said</th>
-                    <th>Order Items</th>
-                    <th>Order Total</th>
-                    <th>AI Response</th>
-                </tr>
-            </thead>
-            <tbody>
-                {table_body}
-            </tbody>
-        </table>
-    </body>
-    </html>
-    """
-
-    return HTMLResponse(content=html)
+    redirect_target = os.getenv("OWNER_DASHBOARD_URL", 'http://localhost:3002/owner-dashboard')
+    return RedirectResponse(url=redirect_target, status_code=307)
 
 
 @app.get("/kitchen/orders", response_class=HTMLResponse)
@@ -504,8 +402,7 @@ async def kitchen_orders():
     </html>
     """
 
-    return HTMLResponse(content=html)
-
+    
 
 # ============================================================================
 # DEMO SECTION: Phone Call System - API Endpoints
@@ -623,6 +520,24 @@ async def serve_widget_css():
     css_path = Path(__file__).parent.parent / "widget" / "widget.css"
     return FileResponse(css_path)
 
+
+
+# JSON API: Owner dashboard data (used by Next.js frontend)
+@app.get("/api/owner/orders")
+async def owner_orders_json():
+    """
+    Return call/order log as JSON (newest first) for the dashboard.
+    """
+    try:
+        if ORDERS_LOG_PATH.exists():
+            with ORDERS_LOG_PATH.open("r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, list):
+                return list(reversed(data))
+        return []
+    except Exception as e:
+        logger.error(f"Error reading orders log: {str(e)}")
+        return JSONResponse({"error": "failed to read orders log"}, status_code=500)
 
 if __name__ == "__main__":
     import uvicorn

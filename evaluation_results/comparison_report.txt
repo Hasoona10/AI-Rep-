@@ -1,0 +1,27 @@
+Model Comparison Report
+==================================================
+
+Best Model (Accuracy): llm (0.9375)
+Best Model (F1): llm (0.9379)
+
+
+All Models:
+--------------------------------------------------
+ml:
+  Accuracy: 0.9062
+  F1 (weighted): 0.9090
+  Precision (weighted): 0.9315
+  Recall (weighted): 0.9062
+
+rule:
+  Accuracy: 0.7438
+  F1 (weighted): 0.7685
+  Precision (weighted): 0.8564
+  Recall (weighted): 0.7438
+
+llm:
+  Accuracy: 0.9375
+  F1 (weighted): 0.9379
+  Precision (weighted): 0.9457
+  Recall (weighted): 0.9375
+

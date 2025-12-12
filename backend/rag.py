@@ -9,11 +9,14 @@ accurate responses. This ensures the AI always has current, accurate business da
 """
 import os
 import json
+import hashlib
 from typing import List, Dict, Optional
 from openai import OpenAI
 import chromadb
 from chromadb.config import Settings
 from pathlib import Path
+from datetime import datetime, timedelta
+from collections import OrderedDict
 from .utils.logger import logger
 
 # Lazy initialization - client will be created when needed
@@ -251,6 +254,47 @@ def seed_vectordb(business_data_path: Path, business_id: str = "restaurant_001",
         raise
 
 
+# Response cache for LLM calls (reduces API costs)
+# Uses LRU cache with TTL (24 hours)
+_response_cache: OrderedDict = OrderedDict()
+_cache_max_size = 500  # Max 500 cached responses
+_cache_ttl_hours = 24  # Cache expires after 24 hours
+
+
+def _get_cache_key(query: str, context_hash: str = "") -> str:
+    """Generate cache key from query and context."""
+    key_string = f"{query.lower().strip()}:{context_hash}"
+    return hashlib.md5(key_string.encode()).hexdigest()
+
+
+def _get_cached_response(cache_key: str) -> Optional[str]:
+    """Get cached response if it exists and hasn't expired."""
+    if cache_key not in _response_cache:
+        return None
+    
+    cached_item = _response_cache[cache_key]
+    # Check if expired (24 hour TTL)
+    if datetime.now() - cached_item['timestamp'] > timedelta(hours=_cache_ttl_hours):
+        _response_cache.pop(cache_key)
+        return None
+    
+    # Move to end (LRU)
+    _response_cache.move_to_end(cache_key)
+    return cached_item['response']
+
+
+def _cache_response(cache_key: str, response: str):
+    """Cache a response."""
+    _response_cache[cache_key] = {
+        'response': response,
+        'timestamp': datetime.now()
+    }
+    
+    # Enforce max size (remove oldest if over limit)
+    if len(_response_cache) > _cache_max_size:
+        _response_cache.popitem(last=False)  # Remove oldest
+
+
 class RAGSystem:
     """RAG system for retrieving business information."""
     
@@ -342,6 +386,18 @@ class RAGSystem:
             List of relevant documents with metadata
         """
         try:
+            # Check if query is completely unrelated to restaurant business
+            # If so, return empty to avoid confusing LLM with irrelevant context
+            query_lower = query.lower()
+            unrelated_keywords = [
+                "weather", "temperature", "rain", "snow", "forecast",
+                "news", "sports", "politics", "stock", "crypto",
+                "movie", "tv show", "netflix", "youtube"
+            ]
+            if any(keyword in query_lower for keyword in unrelated_keywords):
+                logger.info(f"Query '{query[:50]}...' is unrelated to restaurant, skipping RAG retrieval")
+                return []
+            
             # Generate query embedding
             query_embeddings = self._embed_text([query])
             query_embedding = query_embeddings[0]
@@ -378,6 +434,9 @@ class RAGSystem:
         """
         Generate response using GPT-4o with retrieved context.
         
+        COST OPTIMIZATION: Uses response caching to avoid duplicate LLM calls.
+        Cached responses are valid for 24 hours.
+        
         Args:
             query: User's question
             conversation_history: Previous conversation messages
@@ -392,13 +451,27 @@ class RAGSystem:
             if retrieved_context:
                 context_text = "\n\n".join(retrieved_context)
             
+            # Check cache first (cost optimization)
+            context_hash = hashlib.md5(context_text.encode()).hexdigest() if context_text else ""
+            cache_key = _get_cache_key(query, context_hash)
+            cached_response = _get_cached_response(cache_key)
+            
+            if cached_response:
+                logger.info(f"✅ Using CACHED response (no LLM call) for query: {query[:50]}...")
+                return cached_response, "llm_cached"  # Return response and source
+            
             # Build conversation history
             messages = [
                 {
                     "role": "system",
-                    "content": """You are a friendly and helpful AI receptionist for a restaurant. 
+                    "content": """You are a friendly and helpful AI receptionist for Cedar Garden Lebanese Kitchen. 
 Use the provided business information to answer customer questions accurately. 
-Be concise, professional, and warm. If you don't know something, politely say so."""
+Be concise, professional, and warm. 
+
+IMPORTANT: If a customer asks about placing an order or making an order, encourage them to tell you what they'd like to order. 
+For regular takeout orders, we can process them immediately. For large catering orders (party trays), we typically need 24-48 hours notice.
+
+If you don't know something, politely say so and offer to connect them with staff."""
                 }
             ]
             
@@ -421,19 +494,23 @@ Please answer the customer's question using the business information above."""
             # Generate response
             client = get_openai_client()
             response = client.chat.completions.create(
-            model="gpt-4o-mini",   # faster, cheaper, good for phone replies
-            messages=messages,
-            temperature=0.6,
-            max_tokens=220         # keep answers concise so Twilio doesn't time out
+                model="gpt-4o-mini",   # faster, cheaper, good for phone replies
+                messages=messages,
+                temperature=0.3,        # COST OPT: Lower temp = more deterministic, slightly cheaper
+                max_tokens=150         # COST OPT: Reduced from 220 to save tokens
             )
             
             generated_text = response.choices[0].message.content.strip()
-            logger.info(f"Generated response: {generated_text[:100]}...")
-            return generated_text
+            logger.info(f"⚠️ Generated NEW response (LLM call) for query: {query[:50]}...")
             
+            # Cache the response for future use
+            _cache_response(cache_key, generated_text)
+            
+            return generated_text, "llm_gpt4o_mini"  # Return response and source
+                
         except Exception as e:
             logger.error(f"Error generating response: {str(e)}")
-            return "I apologize, but I'm having trouble processing your request right now. Please try again or call back later."
+            return "I apologize, but I'm having trouble processing your request right now. Please try again or call back later.", "llm_error"
 
 
 # Global RAG instance (will be initialized in main.py)

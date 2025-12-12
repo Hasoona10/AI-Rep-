@@ -1,5 +1,14 @@
 """
 Model evaluation pipeline.
+
+DEMO SECTION: Fine-Tuning/Training - Model Evaluation
+This module evaluates how well my trained models perform! It:
+1. Tests models on test data (data they haven't seen before)
+2. Calculates metrics (accuracy, F1 score, precision, recall)
+3. Compares ML models vs rule-based vs LLM methods
+4. Generates confusion matrices and classification reports
+
+This is super important to make sure my models actually work well!
 """
 import csv
 from pathlib import Path
@@ -18,14 +27,17 @@ def evaluate_on_dataset(
     """
     Evaluate classifier on test dataset.
     
+    This function tests a model on test data (data it hasn't seen during training).
+    It makes predictions and compares them to the true labels to calculate accuracy.
+    
     Args:
         test_data_path: Path to test CSV file with 'text' and 'intent' columns
-        classifier: ML classifier instance (if method='ml')
-        method: Evaluation method ('ml', 'rule', 'llm')
-        labels: Optional list of all label names
+        classifier: ML classifier instance (if method='ml') - the trained model
+        method: Evaluation method ('ml', 'rule', 'llm') - which method to test
+        labels: Optional list of all label names (for metrics calculation)
         
     Returns:
-        Dictionary with evaluation results
+        Dictionary with evaluation results (accuracy, F1, precision, recall, etc.)
     """
     import asyncio
     
@@ -41,26 +53,29 @@ def evaluate_on_dataset(
     
     logger.info(f"Evaluating {method} method on {len(texts)} test examples")
     
-    # Get predictions
+    # Get predictions - this is where we test the model!
     predictions = []
     
     if method == "ml":
+        # Test the trained ML model
         if classifier is None:
             raise ValueError("Classifier required for ML method")
         for text in texts:
             try:
-                intent = classifier.predict(text)
+                intent = classifier.predict(text)  # Make prediction
                 predictions.append(intent.value)
             except Exception as e:
                 logger.error(f"Error predicting {text}: {str(e)}")
-                predictions.append("unknown")
+                predictions.append("unknown")  # Default to unknown if error
     
     elif method == "rule":
+        # Test rule-based method (keyword matching)
         for text in texts:
             intent = classify_intent_rule_based(text)
             predictions.append(intent.value)
     
     elif method == "llm":
+        # Test LLM method (OpenAI API) - this is async so we need special handling
         async def get_predictions():
             preds = []
             for text in texts:
@@ -73,10 +88,11 @@ def evaluate_on_dataset(
     else:
         raise ValueError(f"Unknown method: {method}")
     
-    # Calculate metrics
+    # Calculate metrics - compare predictions to true labels
     if labels is None:
         labels = sorted(set(true_labels + predictions))
     
+    # This calculates accuracy, F1, precision, recall, etc.
     metrics = calculate_metrics(true_labels, predictions, labels)
     
     return {
@@ -96,13 +112,17 @@ def compare_all_methods(
     """
     Compare all classification methods (ML, rule-based, LLM).
     
+    This is the main comparison function! It tests all three methods on the same
+    test data and compares their performance. This helps me decide which method
+    to use in production. It also generates confusion matrices and reports.
+    
     Args:
-        test_data_path: Path to test CSV file
-        ml_classifier: Trained ML classifier
-        output_dir: Optional directory to save results
+        test_data_path: Path to test CSV file (same data for all methods)
+        ml_classifier: Trained ML classifier (the model I trained)
+        output_dir: Optional directory to save results (confusion matrices, reports)
         
     Returns:
-        Comparison results dictionary
+        Comparison results dictionary with best model info and metrics
     """
     logger.info("Comparing all classification methods...")
     

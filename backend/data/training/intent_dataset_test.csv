@@ -1,0 +1,161 @@
+text,intent
+see you,goodbye
+Can you tell me what are your business hours,hours
+How much is the pasta,pricing
+WHAT'S GOOD HERE,menu
+"Excuse me, what payment methods",general_question
+"Excuse me, bye for now",goodbye
+Can you tell me can I come at 7pm,hours
+Morning,greeting
+Can you tell me I need a reservation,reservation
+table for 4 please,reservation
+what time does it close?,hours
+I'd like to know book a table for tonight,reservation
+Are you open today,hours
+Do you have a bar,general_question
+I'm wondering how much is the pasta,pricing
+hi there please,greeting
+how much does dinner cost please,pricing
+What do you recommend,menu
+"Excuse me, what are the opening hours",hours
+I'm wondering show me the menu,menu
+"Excuse me, appreciate the help",goodbye
+ARE YOU OPEN NOW,hours
+I'm wondering thank you very much,goodbye
+what payment methods?,general_question
+"Excuse me, hi how are you",greeting
+afternoon?,greeting
+I'd like to know hey I have a question,greeting
+"Excuse me, is it affordable",pricing
+what's popular,menu
+Make a reservation for tomorrow,reservation
+book a table,reservation
+give me directions,direction
+What time can i come,hours
+what's the dress code,general_question
+I'd like to know book dinner for 2,reservation
+morning,greeting
+thanks so much?,goodbye
+When does the restaurant open,hours
+I'm wondering book a table for tonight,reservation
+are you open on weekends,hours
+how much for dinner?,pricing
+Can you tell me what drinks do you have,menu
+reserve a spot,reservation
+What's popular,menu
+what's your pricing like,pricing
+AFTERNOON,greeting
+Can you tell me appreciate the help,goodbye
+I'd like to know what's the location,direction
+table for 4 please please,reservation
+hey I have a question,greeting
+HOW MUCH MONEY,pricing
+how do I get there,direction
+"Excuse me, what's the price",pricing
+thank you very much,goodbye
+are kids welcome please,general_question
+I'd like to know do you have music,general_question
+can you give me the address,direction
+I'm wondering what do you charge,pricing
+hi can you help,greeting
+do you have wifi?,general_question
+"Excuse me, how much money",pricing
+make a reservation for tomorrow,reservation
+bye please,goodbye
+I'm wondering thanks,goodbye
+What do you recommend,menu
+Can you tell me can you give me the address,direction
+what payment methods please,general_question
+when does the restaurant open,hours
+I'm wondering where can I find you,direction
+good day,greeting
+ARE KIDS WELCOME,general_question
+HI HOW ARE YOU,greeting
+what are your operating hours,hours
+I'd like to know hello,greeting
+I'd like to know what are your operating hours,hours
+I'm wondering are you open now,hours
+I'm wondering hello there,greeting
+hello I need help,greeting
+I'm wondering book dinner for 2,reservation
+evening please,greeting
+Can you tell me hello I need help,greeting
+Can you tell me are prices reasonable,pricing
+what's nearby,direction
+Can you tell me what dishes are available,menu
+book a table please,reservation
+how much money?,pricing
+Are prices reasonable,pricing
+what's for dinner,menu
+What's the dress code,general_question
+Can you tell me book dinner for 2,reservation
+do you cater please,general_question
+I'd like to know how much money,pricing
+when do you close?,hours
+What's good here,menu
+DO YOU ACCEPT CARDS,pricing
+Where is the restaurant,direction
+I'd like to reserve please,reservation
+I'd like to know what do you serve,menu
+BOOK A TABLE,reservation
+"Excuse me, hello there",greeting
+Can you tell me how much does dinner cost,pricing
+I'd like to know when does the restaurant open,hours
+I'd like to reserve,reservation
+I'm wondering can you reserve us a table,reservation
+what do you serve,menu
+can I book a table?,reservation
+I'm wondering thank you goodbye,goodbye
+what's the location please,direction
+"Excuse me, what food do you have",menu
+thanks so much?,goodbye
+can I reserve a table?,reservation
+I'd like to know how to get to the restaurant,direction
+what's your phone number,general_question
+give me directions please,direction
+Can you tell me good evening,greeting
+DO YOU HAVE PARKING,general_question
+"Excuse me, what's for dinner",menu
+"Excuse me, what's your phone number",general_question
+I'd like to know good evening,greeting
+what's the average price please,pricing
+I'd like to know can you reserve us a table,reservation
+"Excuse me, what food do you have",menu
+I'd like to know book a table for tonight,reservation
+"Excuse me, what's the cost",pricing
+I'm wondering what's the location,direction
+afternoon?,greeting
+what payment methods,general_question
+I'm wondering what time do you close,hours
+what's your pricing like?,pricing
+thanks?,goodbye
+"Excuse me, where is the restaurant",direction
+Give me directions,direction
+Can you tell me what's your address,direction
+I'd like to reserve,reservation
+what are your prices please,pricing
+what time do you open,hours
+Can you tell me hey I have a question,greeting
+I'd like to know are kids welcome,general_question
+what's the location,direction
+I'd like to know reserve for 7pm,reservation
+reservation for friday,reservation
+WHERE ARE YOU,direction
+I'm wondering how much for two people,pricing
+Can you tell me book dinner for 2,reservation
+WHAT ABOUT SUNDAY,hours
+where can I find you please,direction
+"Excuse me, is it expensive",pricing
+Can you tell me what about sunday,hours
+I'm wondering what do you charge,pricing
+what kind of food,menu
+Can you tell me can I come at 7pm,hours
+hey there,greeting
+WHAT CAN I ORDER,menu
+What time do you close,hours
+What about sunday,hours
+what's your policy,general_question
+"Excuse me, what's your phone number",general_question
+do you cater,general_question
+do you have music please,general_question
+I'd like to know do you deliver,general_question

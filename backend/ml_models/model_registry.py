@@ -1,5 +1,15 @@
 """
 Model registry for tracking and managing trained models.
+
+DEMO SECTION: Fine-Tuning/Training - Model Registry
+This keeps track of all the models I've trained! It's like a database that stores:
+- Which models I've trained
+- Their performance metrics (accuracy, F1, etc.)
+- When they were created
+- Which one is the best
+
+This way I can easily find and use the best model without having to remember
+which file it's in. Super useful when training multiple models!
 """
 import json
 from pathlib import Path
@@ -53,16 +63,20 @@ class ModelRegistry:
         """
         Register a new model version.
         
+        When I train a new model, I register it here so I can track it.
+        It saves the model's performance metrics, algorithm used, etc.
+        This makes it easy to compare different models I've trained.
+        
         Args:
             model_name: Name of the model (e.g., 'intent_classifier')
-            model_path: Path to model directory
-            algorithm: Algorithm used (e.g., 'random_forest')
-            feature_method: Feature extraction method (e.g., 'tfidf')
-            metrics: Model performance metrics
-            metadata: Additional metadata
+            model_path: Path to model directory (where the .pkl files are)
+            algorithm: Algorithm used (e.g., 'random_forest', 'svm')
+            feature_method: Feature extraction method (e.g., 'tfidf', 'bow')
+            metrics: Model performance metrics (accuracy, F1, etc.)
+            metadata: Additional metadata (optional notes about the model)
             
         Returns:
-            Version ID
+            Version ID (unique identifier for this model version)
         """
         if model_name not in self.models:
             self.models[model_name] = []
@@ -100,12 +114,17 @@ class ModelRegistry:
         """
         Get the best model by a specific metric.
         
+        This finds the model with the highest score for a given metric.
+        For example, if I want the model with best accuracy, I call this
+        with metric='accuracy'. Super useful for automatically selecting
+        the best model to use in production!
+        
         Args:
-            model_name: Name of the model
-            metric: Metric to use for comparison
+            model_name: Name of the model (e.g., 'intent_classifier')
+            metric: Metric to use for comparison ('accuracy', 'f1_weighted', etc.)
             
         Returns:
-            Best model entry or None
+            Best model entry (dict with all model info) or None if no models found
         """
         if model_name not in self.models or not self.models[model_name]:
             return None

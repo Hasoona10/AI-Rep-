@@ -75,8 +75,8 @@
                 }
             });
 
-            // Initial greeting
-            this.addMessage('assistant', 'Hello! How can I help you today?');
+            // Initial greeting will come from WebSocket or we'll show it after connection
+            this.greetingShown = false;
         }
 
         attachStyles() {
@@ -87,7 +87,14 @@
         }
 
         connectWebSocket() {
-            const wsUrl = this.config.apiUrl.replace('http', 'ws') + '/api/chat/ws';
+            // Handle both http:// and https://, and ensure ws:// or wss://
+            let wsUrl = this.config.apiUrl.replace(/^http/, 'ws');
+            // If apiUrl doesn't have protocol, add ws://
+            if (!wsUrl.startsWith('ws://') && !wsUrl.startsWith('wss://')) {
+                wsUrl = 'ws://' + wsUrl;
+            }
+            wsUrl = wsUrl + '/api/chat/ws';
+            console.log('Connecting to WebSocket:', wsUrl);
             this.ws = new WebSocket(wsUrl);
 
             this.ws.onopen = () => {
@@ -96,23 +103,37 @@
                     type: 'init',
                     business_id: this.config.businessId
                 }));
+                // WebSocket will send greeting, so we don't need to show one
             };
 
             this.ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data.type === 'message') {
-                    this.addMessage('assistant', data.text);
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'message') {
+                        this.addMessage('assistant', data.text);
+                        this.greetingShown = true;
+                    }
+                } catch (error) {
+                    console.error('Error parsing WebSocket message:', error);
                 }
             };
 
             this.ws.onerror = (error) => {
                 console.error('WebSocket error:', error);
+                // Don't show error to user, HTTP fallback will handle it silently
             };
 
-            this.ws.onclose = () => {
-                console.log('Chat widget disconnected');
-                // Reconnect after 3 seconds
-                setTimeout(() => this.connectWebSocket(), 3000);
+            this.ws.onclose = (event) => {
+                console.log('Chat widget disconnected', event.code, event.reason);
+                // If WebSocket closes unexpectedly, show greeting if not shown yet
+                if (!this.greetingShown && event.code !== 1000) {
+                    this.addMessage('assistant', 'Hello! How can I help you today?');
+                    this.greetingShown = true;
+                }
+                // Only reconnect if it wasn't a normal closure
+                if (event.code !== 1000) {
+                    setTimeout(() => this.connectWebSocket(), 3000);
+                }
             };
         }
 
@@ -121,13 +142,17 @@
             this.container.classList.toggle('open', this.isOpen);
         }
 
-        addMessage(role, text) {
+        addMessage(role, text, messageId = null) {
             const messagesContainer = this.chatWindow.querySelector('.ai-receptionist-messages');
             const message = document.createElement('div');
             message.className = `ai-receptionist-message ai-receptionist-message-${role}`;
             message.textContent = text;
+            if (messageId) {
+                message.setAttribute('data-message-id', messageId);
+            }
             messagesContainer.appendChild(message);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return message;
         }
 
         sendMessage() {
@@ -155,10 +180,12 @@
 
         async sendMessageHTTP(text) {
             try {
+                const sessionId = `web_${Date.now()}`;
                 const response = await fetch(`${this.config.apiUrl}/api/chat/message`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-Session-ID': sessionId
                     },
                     body: JSON.stringify({
                         text: text,
@@ -166,9 +193,21 @@
                     })
                 });
 
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+                }
+
                 const data = await response.json();
                 if (data.response) {
                     this.addMessage('assistant', data.response);
+                    this.greetingShown = true;
+                } else if (data.error) {
+                    this.addMessage('assistant', 'Sorry, I encountered an error. Please try again.');
+                    console.error('API error:', data.error);
+                } else {
+                    console.warn('Unexpected response format:', data);
+                    this.addMessage('assistant', 'Sorry, I received an unexpected response. Please try again.');
                 }
             } catch (error) {
                 console.error('Error sending message:', error);

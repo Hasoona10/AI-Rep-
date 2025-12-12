@@ -1,0 +1,14 @@
+                  precision    recall  f1-score   support
+
+       direction       1.00      1.00      1.00        18
+general_question       0.76      0.90      0.83        21
+         goodbye       1.00      0.75      0.86        12
+        greeting       1.00      0.86      0.93        22
+           hours       1.00      0.91      0.95        22
+            menu       0.89      1.00      0.94        17
+         pricing       1.00      1.00      1.00        23
+     reservation       0.93      1.00      0.96        25
+
+        accuracy                           0.94       160
+       macro avg       0.95      0.93      0.93       160
+    weighted avg       0.95      0.94      0.94       160
